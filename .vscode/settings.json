@@ -1,0 +1,11 @@
+{
+    
+     "files.exclude": {
+         "**/*.class": true
+    },
+    "java.project.referencedLibraries": [
+        "lib/**/*.jar",
+        "sqlite-jdbc-3.36.0.3.jar"
+    ],
+    
+}
