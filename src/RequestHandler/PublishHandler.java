@@ -10,7 +10,6 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
 
 public class PublishHandler {
 
@@ -28,11 +27,21 @@ public class PublishHandler {
 
     }
 
+    public static final String ANSI_RESET = "\u001B[0m";
+    public static final String ANSI_BLACK = "\u001B[30m";
+    public static final String ANSI_RED = "\u001B[31m";
+    public static final String ANSI_GREEN = "\u001B[32m";
+    public static final String ANSI_YELLOW = "\u001B[33m";
+    public static final String ANSI_BLUE = "\u001B[34m";
+    public static final String ANSI_PURPLE = "\u001B[35m";
+    public static final String ANSI_CYAN = "\u001B[36m";
+    public static final String ANSI_WHITE = "\u001B[37m";
+
     public PublishHandler(String author, String message, String date) {
 
-        System.out.println("Request Type : PUBLISH");
-        System.out.println("Author : @" + author + "   at   " + date);
-        System.out.println("-> " + message);
+        System.out.println(ANSI_RED + "Request Type : PUBLISH" + ANSI_RESET);
+        System.out.println(ANSI_BLUE + "Author : @" + author + "   at   " + date + ANSI_RESET);
+        System.out.println(ANSI_WHITE + "-> " + message + ANSI_RESET);
         System.out.println("\n------------------------------------\n");
 
     }
@@ -67,7 +76,6 @@ public class PublishHandler {
 
                     }
                     if (line.equals("$") && c == 2) {
-                        // System.out.println("Status : OK");
                         output.write(("OK \n").getBytes());
                         c++;
 

@@ -8,6 +8,8 @@ public class RequestHandler {
     public RequestHandler(String line, BufferedReader reader, Socket socket) {
         if (line.equals("publish")) {
             new PublishHandler(reader, socket);
+        } else if (line.equals("receiveID")) {
+            new ReceiveIDHandler(reader, socket);
         }
     }
 
