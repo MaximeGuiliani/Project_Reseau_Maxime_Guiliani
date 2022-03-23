@@ -14,75 +14,101 @@ public class ReceiveIDs extends Request {
         getTag();
         getSinceId();
         getLimit();
-
     }
 
-    private void getLimit() {
+    public void getAuthor() {
         boolean wait = false;
-        System.out.println("OPTIONAL  :  LIMIT");
+        System.out.println("author : ");
+        System.out.print("@");
 
         while (!wait) {
             if (sc.hasNextLine()) {
-
                 String s1 = sc.nextLine();
-                this.limit = s1;
-                wait = true;
+
+                if (!s1.isBlank() && !s1.contains(" ")) {
+                    this.author = s1;
+                    wait = true;
+                } else {
+                    System.out.println("please select a valid author name");
+                    System.out.print("@");
+                }
 
             }
 
         }
 
-        sc.close();
-
-    }
-
-    private void getSinceId() {
-        boolean wait = false;
-        System.out.println("Since Id");
-        Scanner sc = new Scanner(System.in);
-        while (!wait) {
-            if (sc.hasNextLine()) {
-
-                String s1 = sc.nextLine();
-                this.sinceId = s1;
-                wait = true;
-
-            }
-
-        }
     }
 
     private void getTag() {
         boolean wait = false;
         System.out.println("Set tag");
-        Scanner sc = new Scanner(System.in);
+        System.out.print("#");
         while (!wait) {
             if (sc.hasNextLine()) {
-
                 String s1 = sc.nextLine();
-                this.tag = s1;
-                wait = true;
+
+                if (s1.contains(" ")) {
+                    System.out.println("please select a valid tag");
+                    System.out.print("#");
+
+                } else {
+                    this.tag = s1;
+                    wait = true;
+                }
 
             }
-
         }
     }
 
-    public void getAuthor() {
+    private void getSinceId() {
         boolean wait = false;
-        System.out.println("Set author");
-        Scanner sc = new Scanner(System.in);
+        System.out.print("Since Id : ");
         while (!wait) {
             if (sc.hasNextLine()) {
-
                 String s1 = sc.nextLine();
-                this.author = s1;
-                wait = true;
+                if (!s1.isBlank()) {
+                    try {
+                        Integer.parseInt(s1);
+                        this.sinceId = s1;
+                        wait = true;
+                    } catch (NumberFormatException e) {
+                        System.out.println("Please select a valid Integer");
+                    }
+                } else {
+                    this.sinceId = "";
+                    wait = true;
+                }
+
+            }
+
+        }
+    }
+
+    private void getLimit() {
+
+        boolean wait = false;
+        System.out.print("LIMIT : ");
+        while (!wait) {
+            if (sc.hasNextLine()) {
+                String s1 = sc.nextLine();
+                if (!s1.isBlank()) {
+                    try {
+                        Integer.parseInt(s1);
+                        this.limit = s1;
+                        wait = true;
+                    } catch (NumberFormatException e) {
+                        System.out.println("Please select a valid Integer");
+                        System.out.print("LIMIT : ");
+
+                    }
+                } else {
+                    this.limit = "";
+                    wait = true;
+                }
 
             }
 
         }
 
     }
-
 }

@@ -11,35 +11,38 @@ import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-public class PublishHandler {
+public class ReplyHandler {
 
     private BufferedReader reader;
     private Socket socket;
     private String message;
     private String author;
     private String date;
+    private String replyId;
 
-    public PublishHandler(BufferedReader reader, Socket socket) {
+    public ReplyHandler(BufferedReader reader, Socket socket) {
         this.socket = socket;
         this.reader = reader;
-        System.out.println(ANSI_RED + "Request Type : PUBLISH" + ANSI_RESET);
+        System.out.println(ANSI_PURPLE + "Request Type : REPLY" + ANSI_RESET);
         handle();
 
     }
 
-    public PublishHandler(String author, String message, String date) {
+    public ReplyHandler(String author, String message, String date, String id) {
 
-        System.out.println(ANSI_RED + "Request Type : PUBLISH" + ANSI_RESET);
+        System.out.println(ANSI_PURPLE + "Request Type : REPLY" + ANSI_RESET);
         System.out.println(ANSI_BLUE + "Author : @" + author + "   at   " + date + ANSI_RESET);
-        System.out.println(ANSI_WHITE + "-> " + message + ANSI_RESET);
+        System.out.println("-> " + message + ANSI_RESET);
+        System.out.println(ANSI_CYAN + "reply to -> " + id + ANSI_RESET);
         System.out.println("\n------------------------------------\n");
 
     }
 
     private String ANSI_RESET = "\u001B[0m";
-    private String ANSI_RED = "\u001B[31m";
+
     private String ANSI_BLUE = "\u001B[34m";
-    private String ANSI_WHITE = "\u001B[37m";
+    private String ANSI_PURPLE = "\u001B[35m";
+    private String ANSI_CYAN = "\u001B[36m";
 
     private void handle() {
 
@@ -47,7 +50,7 @@ public class PublishHandler {
             OutputStream output = socket.getOutputStream();
 
             int c = 0;
-            while (c < 3) {
+            while (c < 4) {
                 String line;
                 try {
                     line = reader.readLine();
@@ -70,11 +73,18 @@ public class PublishHandler {
                         continue;
 
                     }
-                    if (line.equals("$") && c == 2) {
+                    if (line != null && c == 2) {
+                        this.replyId = line;
+                        System.out.println(ANSI_CYAN + "reply to -> " + replyId + ANSI_RESET);
+                        c++;
+                        continue;
+
+                    }
+                    if (line.equals("$") && c == 3) {
                         output.write(("OK \n").getBytes());
                         c++;
 
-                    } else if (!line.equals("$") && c == 2) {
+                    } else if (!line.equals("$") && c == 3) {
                         System.out.println("ERROR");
                         output.write(("ERROR \n").getBytes());
                         c++;
@@ -101,12 +111,14 @@ public class PublishHandler {
         try {
             Connection conn = DriverManager.getConnection(jdbxUrl);
 
-            String sql = "insert into messages (author,message,date) VALUES(?,?,?)";
+            String sql = "insert into messages (author,message,date,reply) VALUES(?,?,?,?)";
 
             PreparedStatement pstmt = conn.prepareStatement(sql);
             pstmt.setString(1, author);
             pstmt.setString(2, message);
             pstmt.setString(3, date);
+            pstmt.setString(4, replyId);
+
             pstmt.executeUpdate();
             conn.close();
         } catch (SQLException e1) {

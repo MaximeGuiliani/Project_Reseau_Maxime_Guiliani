@@ -1,14 +1,17 @@
+
 package src.request;
 
 import java.util.Scanner;
 
-public class Publish extends Request {
-    private Scanner sc = new Scanner(System.in);
+public class RT extends Request {
 
-    public Publish() {
-        this.header = Header.PUBLISH;
+    private Scanner sc = new Scanner(System.in);
+    public String id;
+
+    public RT() {
+        this.header = Header.REPUBLISH;
         getAuthor();
-        getMessage();
+        getId();
 
     }
 
@@ -35,24 +38,30 @@ public class Publish extends Request {
 
     }
 
-    public void getMessage() {
+    private void getId() {
         boolean wait = false;
-        System.out.println("Set message :");
+        System.out.println("ID  :  ");
+
         while (!wait) {
             if (sc.hasNextLine()) {
                 String s1 = sc.nextLine();
-
                 if (!s1.isBlank()) {
-                    this.message = s1;
-                    wait = true;
+                    try {
+                        Integer.parseInt(s1);
+                        this.id = s1;
+                        wait = true;
+                    } catch (NumberFormatException e) {
+                        System.out.println("Please select a valid Integer");
+                        System.out.print("ID  :  ");
 
+                    }
                 } else {
-                    System.out.println("please select a valid message");
+                    System.out.println("Please select a valid Integer");
+                    System.out.print("ID  :  ");
 
                 }
 
             }
-
         }
 
     }

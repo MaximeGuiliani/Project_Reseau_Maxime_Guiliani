@@ -14,7 +14,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 public class ReceiveIDHandler {
-
+    // TODO : table tag (tag,id) double key
     private BufferedReader reader;
     private Socket socket;
     private String author;
@@ -27,31 +27,17 @@ public class ReceiveIDHandler {
     public ReceiveIDHandler(BufferedReader reader, Socket socket) {
         this.socket = socket;
         this.reader = reader;
-        System.out.println("Request Type : RECEIVEID");
+        System.out.println("Request Type : RECEIVEID" + ANSI_RESET);
         handle();
 
     }
 
-    public static final String ANSI_RESET = "\u001B[0m";
-    public static final String ANSI_BLACK = "\u001B[30m";
-    public static final String ANSI_RED = "\u001B[31m";
-    public static final String ANSI_GREEN = "\u001B[32m";
-    public static final String ANSI_YELLOW = "\u001B[33m";
-    public static final String ANSI_BLUE = "\u001B[34m";
-    public static final String ANSI_PURPLE = "\u001B[35m";
-    public static final String ANSI_CYAN = "\u001B[36m";
-    public static final String ANSI_WHITE = "\u001B[37m";
+    private String ANSI_RESET = "\u001B[0m";
+    private String ANSI_RED = "\u001B[31m";
 
-    public ReceiveIDHandler(String author, String tag, String since, String limit) {
-
-        System.out.println(ANSI_RED + "Request Type : RECEIVEID" + ANSI_RESET);
-        System.out.println(ANSI_BLUE + "Author : @" + author + "   at   " + date + ANSI_RESET);
-        System.out.println(ANSI_WHITE + "tag -> #" + tag + ANSI_RESET);
-        System.out.println(ANSI_PURPLE + "limit -> " + limit + ANSI_RESET);
-
-        System.out.println("\n------------------------------------\n");
-
-    }
+    private String ANSI_BLUE = "\u001B[34m";
+    private String ANSI_CYAN = "\u001B[36m";
+    private String ANSI_WHITE = "\u001B[37m";
 
     private void handle() {
 
@@ -69,21 +55,21 @@ public class ReceiveIDHandler {
                         LocalDateTime now = LocalDateTime.now();
                         this.author = line;
                         this.date = dtf.format(now);
-                        System.out.println("Author : @" + author + "   at  " + date);
+                        System.out.println(ANSI_BLUE + "Author : @" + author + "   at  " + date + ANSI_RESET);
                         c++;
                         continue;
 
                     }
                     if (line != null && c == 1) {
                         this.tag = line;
-                        System.out.println("tag -> " + tag);
+                        System.out.println(ANSI_CYAN + "tag -> " + tag + ANSI_RESET);
                         c++;
                         continue;
 
                     }
                     if (line != null && c == 2) {
                         this.sinceID = line;
-                        System.out.println("since -> " + sinceID);
+                        System.out.println(ANSI_WHITE + "since -> " + sinceID + ANSI_RESET);
                         c++;
                         continue;
 
@@ -95,12 +81,12 @@ public class ReceiveIDHandler {
                         } else {
                             limit = 5;
                         }
-                        System.out.println("limit -> " + limit);
+                        System.out.println(ANSI_RED + "limit -> " + limit + ANSI_RESET);
                         c++;
                         continue;
 
                     }
-                    getSQL();
+                    getIDs();
                     if (line.equals("$") && c == 4) {
                         output.write((toSend).getBytes());
                         c++;
@@ -125,20 +111,17 @@ public class ReceiveIDHandler {
 
     }
 
-    public void getSQL() {
+    public void getIDs() {
         String jdbxUrl = "jdbc:sqlite:/home/maxime/Desktop/cours/reseau/Project/table.db";
 
         try {
 
             ArrayList<Integer> listId = new ArrayList<>();
-            Connection connection = DriverManager.getConnection(jdbxUrl);
+            Connection conn = DriverManager.getConnection(jdbxUrl);
 
-            // gestion de l'auteur
-            if (!author.equals("")) {
+            if (!author.isBlank()) {
 
                 String sql = "select * FROM messages where author = ?";
-
-                Connection conn = connection;
                 PreparedStatement pstmt = conn.prepareStatement(sql);
                 pstmt.setString(1, author);
                 ResultSet result = pstmt.executeQuery();
@@ -148,24 +131,23 @@ public class ReceiveIDHandler {
                 }
             }
             // Gestion du tag
-            if (!tag.equals("")) {
+            if (!tag.isBlank()) {
                 if (listId.size() <= 0) {
                     String sql = "select * FROM messages";
-                    Connection conn = connection;
                     PreparedStatement pstmt = conn.prepareStatement(sql);
                     ResultSet result = pstmt.executeQuery();
                     while (result.next()) {
                         String message = result.getString("message");
                         if (message.contains("#" + tag)) {
+
                             String id = result.getString("id");
                             listId.add(Integer.parseInt(id));
-
                         }
                     }
                 } else {
+                    ArrayList<Integer> newList = new ArrayList<>();
                     for (int e : listId) {
                         String sql = "select * from messages where id = ?";
-                        Connection conn = connection;
 
                         PreparedStatement pstmt = conn.prepareStatement(sql);
                         pstmt.setString(1, "" + e);
@@ -174,20 +156,20 @@ public class ReceiveIDHandler {
                         if (result.next()) {
                             String message = result.getString("message");
                             if (message.contains("#" + tag)) {
-                                listId.add(e);
+                                newList.add(e);
                             }
 
                         }
                     }
+                    listId = newList;
 
                 }
 
             }
             // Gestion du since
-            if (sinceID.equals("")) {
+            if (!sinceID.isBlank()) {
                 if (listId.size() <= 0) {
-                    String sql = "select message from messages where id >= ?";
-                    Connection conn = connection;
+                    String sql = "select * from messages where id >= ?";
                     PreparedStatement pstmt = conn.prepareStatement(sql);
                     pstmt.setString(1, "" + sinceID);
                     ResultSet result = pstmt.executeQuery();
@@ -198,19 +180,19 @@ public class ReceiveIDHandler {
                 } else {
                     ArrayList<Integer> newList = new ArrayList<>();
                     for (int e : listId) {
-                        if (e < Integer.parseInt(sinceID)) {
+                        if (e >= Integer.parseInt(sinceID)) {
                             newList.add(e);
                         }
                     }
+
                     listId = newList;
 
                 }
 
             }
             // Gestion du limit
-            if (listId.size() <= 0) {
+            if (listId.size() <= 0 && author.equals("") && tag.equals("") && sinceID.equals("")) {
                 String sql = "select * FROM messages";
-                Connection conn = connection;
                 PreparedStatement pstmt = conn.prepareStatement(sql);
                 ResultSet result = pstmt.executeQuery();
                 while (result.next()) {
@@ -219,7 +201,7 @@ public class ReceiveIDHandler {
                 }
 
                 if (limit < listId.size()) {
-                    for (int i = 0; i < listId.size() - limit; i++) {
+                    while (listId.size() > limit) {
                         listId.remove(0);
 
                     }
@@ -227,7 +209,7 @@ public class ReceiveIDHandler {
 
             } else {
                 if (limit < listId.size()) {
-                    for (int i = 0; i < listId.size() - limit; i++) {
+                    while (limit < listId.size()) {
                         listId.remove(0);
 
                     }
@@ -235,6 +217,8 @@ public class ReceiveIDHandler {
 
             }
             toSend = listId.toString();
+            conn.close();
+
             System.out.println(listId.toString());
 
         } catch (SQLException e1) {
