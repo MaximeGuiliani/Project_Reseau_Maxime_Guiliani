@@ -7,9 +7,13 @@ import java.net.Socket;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class PublishHandler {
 
@@ -18,6 +22,7 @@ public class PublishHandler {
     private String message;
     private String author;
     private String date;
+    private int messageID;
 
     public PublishHandler(BufferedReader reader, Socket socket) {
         this.socket = socket;
@@ -87,6 +92,11 @@ public class PublishHandler {
             }
             System.out.println("\n------------------------------------\n");
             updateSQL();
+            getActualID();
+            Matcher matcher = getTags(message);
+            while (matcher.find()) {
+                addTagSQL(matcher.group(), messageID);
+            }
             reader.close();
 
         } catch (IOException e) {
@@ -108,6 +118,49 @@ public class PublishHandler {
             pstmt.setString(2, message);
             pstmt.setString(3, date);
             pstmt.executeUpdate();
+            conn.close();
+        } catch (SQLException e1) {
+            e1.printStackTrace();
+        }
+    }
+
+    private void addTagSQL(String tag, int messageID) {
+        String jdbxUrl = "jdbc:sqlite:/home/maxime/Desktop/cours/reseau/Project/table.db";
+
+        try {
+            Connection conn = DriverManager.getConnection(jdbxUrl);
+
+            String sql = "insert into tags (tag,id) VALUES(?,?)";
+
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, tag);
+            pstmt.setInt(2, messageID);
+
+            pstmt.executeUpdate();
+            conn.close();
+        } catch (SQLException e1) {
+            e1.printStackTrace();
+        }
+    }
+
+    public Matcher getTags(String string) {
+        Pattern pattern = Pattern.compile("#\\w+");
+        return pattern.matcher(string);
+    }
+
+    public void getActualID() {
+        String jdbxUrl = "jdbc:sqlite:/home/maxime/Desktop/cours/reseau/Project/table.db";
+
+        try {
+            Connection conn = DriverManager.getConnection(jdbxUrl);
+            String sql = "SELECT * FROM messages ORDER BY id DESC limit 1 ";
+
+            Statement statement = conn.createStatement();
+            ResultSet result = statement.executeQuery(sql);
+            if (result.next()) {
+                messageID = Integer.parseInt(result.getString("id"));
+
+            }
             conn.close();
         } catch (SQLException e1) {
             e1.printStackTrace();

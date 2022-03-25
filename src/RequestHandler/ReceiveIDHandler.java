@@ -14,7 +14,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 public class ReceiveIDHandler {
-    // TODO : table tag (tag,id) double key
+
     private BufferedReader reader;
     private Socket socket;
     private String author;
@@ -133,16 +133,17 @@ public class ReceiveIDHandler {
             // Gestion du tag
             if (!tag.isBlank()) {
                 if (listId.size() <= 0) {
-                    String sql = "select * FROM messages";
-                    PreparedStatement pstmt = conn.prepareStatement(sql);
-                    ResultSet result = pstmt.executeQuery();
-                    while (result.next()) {
-                        String message = result.getString("message");
-                        if (message.contains("#" + tag)) {
 
-                            String id = result.getString("id");
-                            listId.add(Integer.parseInt(id));
-                        }
+                    String sql = "select * FROM tags where tag = ?";
+                    PreparedStatement pstmt = conn.prepareStatement(sql);
+                    pstmt.setString(1, "#" + tag);
+
+                    ResultSet result = pstmt.executeQuery();
+
+                    while (result.next()) {
+                        String id = result.getString("id");
+                        listId.add(Integer.parseInt(id));
+
                     }
                 } else {
                     ArrayList<Integer> newList = new ArrayList<>();

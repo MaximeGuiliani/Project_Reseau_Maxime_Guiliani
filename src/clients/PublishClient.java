@@ -23,6 +23,7 @@ public class PublishClient {
             output.write(("publish" + "\n").getBytes());
             output.write((pub.author + "\n").getBytes());
             output.write((pub.message + "\n").getBytes());
+
             output.write("$".getBytes());
             output.write("\r\n".getBytes());
         } catch (Exception e) {

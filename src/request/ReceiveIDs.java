@@ -24,8 +24,10 @@ public class ReceiveIDs extends Request {
         while (!wait) {
             if (sc.hasNextLine()) {
                 String s1 = sc.nextLine();
-
-                if (!s1.isBlank() && !s1.contains(" ")) {
+                if (s1.isEmpty()) {
+                    this.author = "";
+                    wait = true;
+                } else if (!s1.isBlank() && !s1.contains(" ")) {
                     this.author = s1;
                     wait = true;
                 } else {
