@@ -6,7 +6,8 @@ public abstract class Request {
         RCV_IDS,
         RCV_MSG,
         REPLY,
-        REPUBLISH, CONNECT
+        REPUBLISH,
+        CONNECT
     }
 
     public Header header;

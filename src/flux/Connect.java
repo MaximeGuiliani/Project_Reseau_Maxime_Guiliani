@@ -1,16 +1,18 @@
 package src.flux;
 
+import java.net.Socket;
 import java.util.Scanner;
 
 import src.request.Request;
 
 public class Connect extends Request {
     private Scanner sc = new Scanner(System.in);
+    private Socket socket;
 
-    public Connect() {
+    public Connect(Socket socket) {
+        this.socket = socket;
         this.header = Header.CONNECT;
         getAuthor();
-        getMessage();
 
     }
 
@@ -29,28 +31,6 @@ public class Connect extends Request {
                 } else {
                     System.out.println("please select a valid author name");
                     System.out.print("@");
-                }
-
-            }
-
-        }
-
-    }
-
-    public void getMessage() {
-        boolean wait = false;
-        System.out.println("Set message :");
-        while (!wait) {
-            if (sc.hasNextLine()) {
-                String s1 = sc.nextLine();
-
-                if (!s1.isBlank()) {
-                    this.message = s1;
-                    wait = true;
-
-                } else {
-                    System.out.println("please select a valid message");
-
                 }
 
             }

@@ -48,7 +48,7 @@ public class TCPServer {
     public static void getSqlData() {
 
         try {
-            String jdbxUrl = "jdbc:sqlite:/home/maxime/Desktop/cours/reseau/Project/table.db";
+            String jdbxUrl = "jdbc:sqlite:table.db";
             Connection connection = DriverManager.getConnection(jdbxUrl);
             String sql = "select * from messages";
             Statement statement = connection.createStatement();

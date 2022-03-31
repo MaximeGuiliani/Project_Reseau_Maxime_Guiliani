@@ -16,6 +16,8 @@ public class RequestHandler {
             new ReplyHandler(reader, socket);
         } else if (line.equals("rt")) {
             new RTHandler(reader, socket);
+        } else if (line.equals("connect")) {
+            new RTHandler(reader, socket);
         }
     }
 
