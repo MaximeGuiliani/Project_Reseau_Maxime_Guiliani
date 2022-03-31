@@ -8,11 +8,11 @@ Sur ce blog on peut voir toutes les requetes sur le server et faire de nombreuse
 
 On peut lancer un server et faire les requete suivantes:
 
--receiveid : rid (recevoir les ids d'une recherche spécifique)
--publish : pub (publier un message)
--receivemsg : msg (recevoir un message selon un id)
--reply : reply (repondre a un message)
--republish : rt (republier un message )
+-receiveid : rid (recevoir les ids d'une recherche spécifique).
+-publish : pub (publier un message).
+-receivemsg : msg (recevoir un message selon un id).
+-reply : reply (repondre a un message).
+-republish : rt (republier un message ).
 
 En cours :
 Connecte qui permet a un client de se connecter et de recevoir tout les messages des personne qu'il suit
