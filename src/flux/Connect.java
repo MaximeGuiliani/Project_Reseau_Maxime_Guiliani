@@ -7,10 +7,8 @@ import src.request.Request;
 
 public class Connect extends Request {
     private Scanner sc = new Scanner(System.in);
-    private Socket socket;
 
     public Connect(Socket socket) {
-        this.socket = socket;
         this.header = Header.CONNECT;
         getAuthor();
 

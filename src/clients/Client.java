@@ -3,7 +3,6 @@ package src.clients;
 import java.net.Socket;
 import java.util.Scanner;
 
-import src.flux.Connect;
 import src.flux.ConnectClient;
 import src.flux.SubscribeClient;
 import src.flux.UnsubscribeClient;
@@ -37,6 +36,7 @@ public class Client {
                 waitend = true;
 
             }
+            scan.close();
 
         }
 
