@@ -1,6 +1,5 @@
 package src.flux;
 
-import java.net.Socket;
 import java.util.Scanner;
 
 import src.request.Request;
@@ -8,7 +7,7 @@ import src.request.Request;
 public class Connect extends Request {
     private Scanner sc = new Scanner(System.in);
 
-    public Connect(Socket socket) {
+    public Connect() {
         this.header = Header.CONNECT;
         getAuthor();
 

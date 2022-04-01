@@ -116,7 +116,7 @@ public class ReplyHandler {
     }
 
     private void addTagSQL(String tag, int messageID) {
-        String jdbxUrl = "jdbc:sqlite:/home/maxime/Desktop/cours/reseau/Project/table.db";
+        String jdbxUrl = "jdbc:sqlite:table.db";
 
         try {
             Connection conn = DriverManager.getConnection(jdbxUrl);
@@ -140,7 +140,7 @@ public class ReplyHandler {
     }
 
     public void updateSQL() {
-        String jdbxUrl = "jdbc:sqlite:/home/maxime/Desktop/cours/reseau/Project/table.db";
+        String jdbxUrl = "jdbc:sqlite:table.db";
 
         try {
             Connection conn = DriverManager.getConnection(jdbxUrl);
@@ -162,7 +162,7 @@ public class ReplyHandler {
     }
 
     public void getActualID() {
-        String jdbxUrl = "jdbc:sqlite:/home/maxime/Desktop/cours/reseau/Project/table.db";
+        String jdbxUrl = "jdbc:sqlite:table.db";
 
         try {
             Connection conn = DriverManager.getConnection(jdbxUrl);

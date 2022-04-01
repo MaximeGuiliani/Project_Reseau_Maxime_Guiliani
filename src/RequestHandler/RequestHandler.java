@@ -3,6 +3,10 @@ package src.RequestHandler;
 import java.io.BufferedReader;
 import java.net.Socket;
 
+import src.flux.ConnectHandler;
+import src.flux.SubscribeHandler;
+import src.flux.UnsubscribeHandler;
+
 public class RequestHandler {
 
     public RequestHandler(String line, BufferedReader reader, Socket socket) {
@@ -17,7 +21,11 @@ public class RequestHandler {
         } else if (line.equals("rt")) {
             new RTHandler(reader, socket);
         } else if (line.equals("connect")) {
-            new RTHandler(reader, socket);
+            new ConnectHandler(reader, socket);
+        } else if (line.equals("subscribe")) {
+            new SubscribeHandler(reader, socket);
+        } else if (line.equals("unsubscribe")) {
+            new UnsubscribeHandler(reader, socket);
         }
     }
 

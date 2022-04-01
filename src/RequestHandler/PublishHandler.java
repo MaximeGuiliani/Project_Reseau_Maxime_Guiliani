@@ -106,7 +106,7 @@ public class PublishHandler {
     }
 
     public void updateSQL() {
-        String jdbxUrl = "jdbc:sqlite:/home/maxime/Desktop/cours/reseau/Project/table.db";
+        String jdbxUrl = "jdbc:sqlite:table.db";
 
         try {
             Connection conn = DriverManager.getConnection(jdbxUrl);
@@ -125,7 +125,7 @@ public class PublishHandler {
     }
 
     private void addTagSQL(String tag, int messageID) {
-        String jdbxUrl = "jdbc:sqlite:/home/maxime/Desktop/cours/reseau/Project/table.db";
+        String jdbxUrl = "jdbc:sqlite:table.db";
 
         try {
             Connection conn = DriverManager.getConnection(jdbxUrl);
@@ -149,7 +149,7 @@ public class PublishHandler {
     }
 
     public void getActualID() {
-        String jdbxUrl = "jdbc:sqlite:/home/maxime/Desktop/cours/reseau/Project/table.db";
+        String jdbxUrl = "jdbc:sqlite:table.db";
 
         try {
             Connection conn = DriverManager.getConnection(jdbxUrl);
