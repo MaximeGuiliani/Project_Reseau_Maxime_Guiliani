@@ -4,8 +4,6 @@ import java.net.Socket;
 import java.util.Scanner;
 
 import src.flux.ConnectClient;
-import src.flux.SubscribeClient;
-import src.flux.UnsubscribeClient;
 
 public class Client {
     public Client(String requestType, Socket socket) {
@@ -21,10 +19,6 @@ public class Client {
             new RTClient(socket);
         } else if (requestType.equals("con") || requestType.equals("connect")) {
             new ConnectClient(socket);
-        } else if (requestType.equals("sub") || requestType.equals("subscribe")) {
-            new SubscribeClient(socket);
-        } else if (requestType.equals("unsub") || requestType.equals("unsubscribe")) {
-            new UnsubscribeClient(socket);
         } else {
             System.out.println(" !! error !! ");
             System.out.println("please select a valid request");

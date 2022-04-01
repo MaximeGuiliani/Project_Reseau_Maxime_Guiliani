@@ -19,14 +19,16 @@ Connecte qui permet a un client de se connecter et de recevoir tout les messages
 
 Dans Le dossier Project:
 
+Pour compiler :
+
+    javac src/flux/_.java; javac src/_.java;javac src/RequestHandler/_.java;javac src/request/_.java;javac src/clients/\*.java;
+
 Pour utiliser le server :
 
     java -cp .:sqlite-jdbc-3.36.0.3.jar src.TCPServer
 
-Pour compiler :
-
-    javac src/_.java;javac src/RequestHandler/_.java;javac src/request/_.java;javac src/clients/_.java;
-
 Pour lancer un client :
 
-    java src.TCPClient localhost 12345
+    java -cp .:sqlite-jdbc-3.36.0.3.jar src.TCPClient localhost 12345
+
+Ensuite on peut utiliser les requêtes suivantes :

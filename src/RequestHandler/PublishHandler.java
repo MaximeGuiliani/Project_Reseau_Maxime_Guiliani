@@ -67,15 +67,13 @@ public class PublishHandler {
                         c++;
                         continue;
 
-                    }
-                    if (line != null && c == 1) {
+                    } else if (line != null && c == 1) {
                         this.message = line;
                         System.out.println("-> " + message);
                         c++;
                         continue;
 
-                    }
-                    if (line.equals("$") && c == 2) {
+                    } else if (line.equals("$") && c == 2) {
                         output.write(("OK \n").getBytes());
                         c++;
 

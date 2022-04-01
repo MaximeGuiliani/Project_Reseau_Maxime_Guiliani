@@ -12,7 +12,7 @@ public class ConnectClient {
     }
 
     private void connect() {
-        Connect connect = new Connect();
+        Connect connect = new Connect(socket);
         try {
             OutputStream output = socket.getOutputStream();
             output.write(("connect" + "\n").getBytes());
