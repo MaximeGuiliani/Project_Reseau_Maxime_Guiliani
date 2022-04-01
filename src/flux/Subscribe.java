@@ -54,7 +54,6 @@ public class Subscribe extends Request {
                 }
             }
         }
-        sc.close();
 
     }
 

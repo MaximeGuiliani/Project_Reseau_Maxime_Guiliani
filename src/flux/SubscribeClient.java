@@ -21,6 +21,7 @@ public class SubscribeClient {
             output.write((sub.follow + "\n").getBytes());
             output.write("$".getBytes());
             output.write("\r\n".getBytes());
+
         } catch (Exception e) {
             e.printStackTrace();
         }

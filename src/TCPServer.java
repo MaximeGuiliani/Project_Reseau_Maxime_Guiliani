@@ -11,9 +11,7 @@ import java.sql.Statement;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
-import src.RequestHandler.PublishHandler;
-import src.RequestHandler.RTHandler;
-import src.RequestHandler.ReplyHandler;
+import src.RequestHandler.*;
 
 public class TCPServer {
     public static final String ANSI_RESET = "\u001B[0m";

@@ -23,8 +23,10 @@ public class RequestHandler {
         } else if (line.equals("connect")) {
             new ConnectHandler(reader, socket);
         } else if (line.equals("subscribe")) {
+
             new SubscribeHandler(reader, socket);
         } else if (line.equals("unsubscribe")) {
+
             new UnsubscribeHandler(reader, socket);
         }
     }

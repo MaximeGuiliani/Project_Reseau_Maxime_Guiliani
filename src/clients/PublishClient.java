@@ -19,11 +19,9 @@ public class PublishClient {
         Request pub = new Publish();
         try {
             OutputStream output = socket.getOutputStream();
-
             output.write(("publish" + "\n").getBytes());
             output.write((pub.author + "\n").getBytes());
             output.write((pub.message + "\n").getBytes());
-
             output.write("$".getBytes());
             output.write("\r\n".getBytes());
         } catch (Exception e) {

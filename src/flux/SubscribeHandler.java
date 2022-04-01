@@ -11,97 +11,89 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 public class SubscribeHandler {
+    private BufferedReader reader;
+    private Socket socket;
+    private String author;
+    private String follow;
 
     public SubscribeHandler(BufferedReader reader, Socket socket) {
+        this.socket = socket;
+        this.reader = reader;
+        System.out.println(ANSI_RED + "Request Type : SUBSCRIBE" + ANSI_RESET);
+        handle();
+
     }
 
-    public class UnsubscribeHandler {
-        private BufferedReader reader;
-        private Socket socket;
-        private String author;
-        private String follow;
+    private String ANSI_RESET = "\u001B[0m";
+    private String ANSI_RED = "\u001B[31m";
+    private String ANSI_BLUE = "\u001B[34m";
 
-        public UnsubscribeHandler(BufferedReader reader, Socket socket) {
-            this.socket = socket;
-            this.reader = reader;
-            System.out.println(ANSI_RED + "Request Type : SUBSCRIBE" + ANSI_RESET);
-            handle();
+    private void handle() {
 
-        }
+        try {
+            OutputStream output = socket.getOutputStream();
 
-        private String ANSI_RESET = "\u001B[0m";
-        private String ANSI_RED = "\u001B[31m";
-        private String ANSI_BLUE = "\u001B[34m";
+            int c = 0;
+            while (c < 3) {
+                String line;
+                try {
+                    line = reader.readLine();
 
-        private void handle() {
+                    if (line != null && c == 0) {
 
-            try {
-                OutputStream output = socket.getOutputStream();
+                        this.author = line;
+                        System.out.println(ANSI_BLUE + "Author : @" + author + ANSI_RESET);
+                        c++;
+                        continue;
 
-                int c = 0;
-                while (c < 3) {
-                    String line;
-                    try {
-                        line = reader.readLine();
-
-                        if (line != null && c == 0) {
-
-                            this.author = line;
-                            System.out.println(ANSI_BLUE + "Author : @" + author + ANSI_RESET);
-                            c++;
-                            continue;
-
-                        }
-                        if (line != null && c == 1) {
-                            this.follow = line;
-                            System.out.println("Is now following  -> " + follow);
-                            c++;
-                            continue;
-
-                        }
-                        if (line.equals("$") && c == 2) {
-                            output.write(("OK \n").getBytes());
-                            c++;
-
-                        } else if (!line.equals("$") && c == 2) {
-                            System.out.println("ERROR");
-                            output.write(("ERROR \n").getBytes());
-                            c++;
-
-                        }
-
-                    } catch (IOException e) {
-                        output.write(("ERROR\n" + "\n").getBytes());
                     }
+                    if (line != null && c == 1) {
+                        this.follow = line;
+                        System.out.println("Is now following  -> " + follow);
+                        c++;
+                        continue;
+
+                    }
+                    if (line.equals("$") && c == 2) {
+                        output.write(("OK \n").getBytes());
+                        c++;
+
+                    } else if (!line.equals("$") && c == 2) {
+                        System.out.println("ERROR");
+                        output.write(("ERROR \n").getBytes());
+                        c++;
+
+                    }
+
+                } catch (IOException e) {
+                    output.write(("ERROR\n" + "\n").getBytes());
                 }
-                System.out.println("\n------------------------------------\n");
-                updateSQL();
-                reader.close();
-
-            } catch (IOException e) {
-
             }
+            System.out.println("\n------------------------------------\n");
+            updateSQL();
+            reader.close();
 
-        }
+        } catch (IOException e) {
 
-        public void updateSQL() {
-            String jdbxUrl = "jdbc:sqlite:table.db";
-
-            try {
-                Connection conn = DriverManager.getConnection(jdbxUrl);
-
-                String sql = "insert into follows (username,following) VALUES(?,?)";
-
-                PreparedStatement pstmt = conn.prepareStatement(sql);
-                pstmt.setString(1, author);
-                pstmt.setString(2, follow);
-                pstmt.executeUpdate();
-                conn.close();
-            } catch (SQLException e1) {
-                e1.printStackTrace();
-            }
         }
 
     }
 
+    public void updateSQL() {
+        String jdbxUrl = "jdbc:sqlite:table.db";
+
+        try {
+            Connection conn = DriverManager.getConnection(jdbxUrl);
+
+            String sql = "insert into follows (username,following) VALUES(?,?)";
+
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, author);
+            pstmt.setString(2, follow);
+            pstmt.executeUpdate();
+            conn.close();
+        } catch (SQLException e1) {
+            e1.printStackTrace();
+        }
+    }
 }
