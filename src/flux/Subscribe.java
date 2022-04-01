@@ -12,12 +12,10 @@ import src.request.Request;
 public class Subscribe extends Request {
     private Scanner sc = new Scanner(System.in);
     public String follow;
-    private Socket socket;
     private String username;
 
     public Subscribe(Socket socket, String username) {
         this.username = username;
-        this.socket = socket;
         this.header = Header.SUBSCRIBE;
         getFollow();
         System.out.println("\n------------------------------------\n");

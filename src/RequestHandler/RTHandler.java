@@ -7,9 +7,12 @@ import java.net.Socket;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+
+import src.TCPServer;
 
 public class RTHandler {
 
@@ -90,6 +93,7 @@ public class RTHandler {
             }
             System.out.println("\n------------------------------------\n");
             updateSQL();
+            // SentUpdate();
             reader.close();
 
         } catch (IOException e) {
@@ -116,6 +120,41 @@ public class RTHandler {
             conn.close();
         } catch (SQLException e1) {
             e1.printStackTrace();
+        }
+    }
+
+    private void SentUpdate() {
+        String check = author;
+        try {
+            String jdbxUrl = "jdbc:sqlite:table.db";
+            Connection connection = DriverManager.getConnection(jdbxUrl);
+            String sql = "select * from follows where following = ?";
+
+            PreparedStatement pstmt = connection.prepareStatement(sql);
+            pstmt.setString(1, check);
+            ResultSet result = pstmt.executeQuery();
+            while (result.next()) {
+                String follows = result.getString("username");
+
+                Socket socket = TCPServer.connectedUsers.get(follows);
+                OutputStream output;
+                if (!socket.isClosed()) {
+
+                    try {
+                        output = socket.getOutputStream();
+                        output.write(("update" + "\n").getBytes());
+                        output.write("$".getBytes());
+                        output.write("\r\n".getBytes());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+        } catch (SQLException e) {
+            System.out.println("echec de connexion");
+
+            e.printStackTrace();
         }
     }
 

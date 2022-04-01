@@ -15,6 +15,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import src.TCPServer;
+
 public class ReplyHandler {
 
     private BufferedReader reader;
@@ -103,6 +105,7 @@ public class ReplyHandler {
             System.out.println("\n------------------------------------\n");
             updateSQL();
             getActualID();
+            // SentUpdate();
             Matcher matcher = getTags(message);
             while (matcher.find()) {
                 addTagSQL(matcher.group(), messageID);
@@ -177,6 +180,41 @@ public class ReplyHandler {
             conn.close();
         } catch (SQLException e1) {
             e1.printStackTrace();
+        }
+    }
+
+    private void SentUpdate() {
+        String check = author;
+        try {
+            String jdbxUrl = "jdbc:sqlite:table.db";
+            Connection connection = DriverManager.getConnection(jdbxUrl);
+            String sql = "select * from follows where following = ?";
+
+            PreparedStatement pstmt = connection.prepareStatement(sql);
+            pstmt.setString(1, check);
+            ResultSet result = pstmt.executeQuery();
+            while (result.next()) {
+                String follows = result.getString("username");
+
+                Socket socket = TCPServer.connectedUsers.get(follows);
+                OutputStream output;
+                if (!socket.isClosed()) {
+
+                    try {
+                        output = socket.getOutputStream();
+                        output.write(("update" + "\n").getBytes());
+                        output.write("$".getBytes());
+                        output.write("\r\n".getBytes());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+        } catch (SQLException e) {
+            System.out.println("echec de connexion");
+
+            e.printStackTrace();
         }
     }
 
