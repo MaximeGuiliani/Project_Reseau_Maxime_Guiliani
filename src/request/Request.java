@@ -7,7 +7,9 @@ public abstract class Request {
         RCV_MSG,
         REPLY,
         REPUBLISH,
-        CONNECT
+        CONNECT,
+        SUBSCRIBE,
+        UNSUBSCRIBE
     }
 
     public Header header;

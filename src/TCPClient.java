@@ -22,6 +22,7 @@ public class TCPClient {
             Socket socket = new Socket();
             SocketAddress endpoint = new InetSocketAddress(args[0], Integer.parseInt(args[1]));
             socket.connect(endpoint);
+
             while (!waitend) {
 
                 String string = scan.nextLine();

@@ -32,9 +32,7 @@ public class Connect extends Request {
                     System.out.println("please select a valid author name");
                     System.out.print("@");
                 }
-
             }
-
         }
 
     }
