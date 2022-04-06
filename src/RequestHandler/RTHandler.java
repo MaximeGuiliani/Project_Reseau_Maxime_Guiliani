@@ -11,6 +11,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Map;
 
 import src.TCPServer;
 
@@ -93,7 +94,7 @@ public class RTHandler {
             }
             System.out.println("\n------------------------------------\n");
             updateSQL();
-            // SentUpdate();
+            SentUpdate();
             reader.close();
 
         } catch (IOException e) {
@@ -136,7 +137,9 @@ public class RTHandler {
             while (result.next()) {
                 String follows = result.getString("username");
 
-                Socket socket = TCPServer.connectedUsers.get(follows);
+                // TODO SQL
+                Map<String, Socket> connected = TCPServer.getConected();
+                Socket socket = connected.get(follows);
                 OutputStream output;
                 if (!socket.isClosed()) {
 

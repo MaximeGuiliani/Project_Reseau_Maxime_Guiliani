@@ -77,7 +77,16 @@ public class TCPServer {
             System.out.println("echec de connexion");
 
             e.printStackTrace();
+
         }
+    }
+
+    public static Map<String, Socket> getConected() {
+        return connectedUsers;
+    }
+
+    public static void addConected(String username, Socket socket) {
+        connectedUsers.put(username, socket);
     }
 
 }

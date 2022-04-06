@@ -26,7 +26,9 @@ public class Connect extends Request {
         this.socket = socket;
         this.header = Header.CONNECT;
         getAuthor();
-        TCPServer.connectedUsers.put(username, socket);
+
+        TCPServer.addConected(username, socket);
+
         getSqlFollow();
         Executor executor_stealing = Executors.newWorkStealingPool();
 

@@ -12,6 +12,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -93,7 +94,7 @@ public class PublishHandler {
             System.out.println("\n------------------------------------\n");
             updateSQL();
             getActualID();
-            // SentUpdate();
+            SentUpdate();
             Matcher matcher = getTags(message);
             while (matcher.find()) {
                 addTagSQL(matcher.group(), messageID);
@@ -181,8 +182,10 @@ public class PublishHandler {
             while (result.next()) {
                 String follows = result.getString("username");
 
-                Socket socket = TCPServer.connectedUsers.get(follows);
+                Map<String, Socket> connected = TCPServer.getConected();
+                Socket socket = connected.get(follows);
                 OutputStream output;
+
                 if (!socket.isClosed()) {
                     try {
                         output = socket.getOutputStream();
